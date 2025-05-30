@@ -1,1 +1,1 @@
-Servidor intermediário
+Servidor Intermediário
