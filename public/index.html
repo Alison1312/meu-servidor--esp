@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Portão Casa Ramires</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="manifest" href="manifest.json">
+  <style>
+    body {
+      background-color: #f0f0f0;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 30px;
+    }
+    h1 {
+      color: #333;
+    }
+    input, button {
+      width: 80%;
+      max-width: 300px;
+      padding: 12px;
+      margin: 10px;
+      font-size: 16px;
+      border-radius: 8px;
+    }
+    input {
+      border: 1px solid #ccc;
+    }
+    button {
+      background-color: #007BFF;
+      color: white;
+      border: none;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    #status {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>Portão Casa Ramires</h1>
+
+  <input type="password" id="senha" placeholder="Digite a senha" />
+  <button onclick="enviarComando('abrir')">Abrir Portão</button>
+  <button onclick="enviarComando('ligar')">Ligar Luz</button>
+  <button onclick="atualizarStatus()">Atualizar Status</button>
+
+  <p id="status">Status: --</p>
+
+  <script>
+    const servidor = "https://servidor-portao.onrender.com";
+    const dispositivo = "esp8266-casa-ramires";
+
+    async function enviarComando(comando) {
+      const senha = document.getElementById("senha").value;
+      if (!senha || senha !== "alison321") {
+        alert("Senha incorreta.");
+        return;
+      }
+
+      const res = await fetch(`${servidor}/api/comando`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ dispositivo, comando })
+      });
+
+      const status = document.getElementById("status");
+      if (res.ok) {
+        status.innerText = `Comando "${comando}" enviado.`;
+        status.style.color = "green";
+      } else {
+        status.innerText = "Erro ao enviar comando.";
+        status.style.color = "red";
+      }
+    }
+
+    async function atualizarStatus() {
+      try {
+        const res = await fetch(`http://${dispositivo}/status`);
+        const text = await res.text();
+        document.getElementById("status").innerText = "Status: " + text;
+      } catch (e) {
+        document.getElementById("status").innerText = "Status: não disponível";
+      }
+    }
+
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("sw.js").catch(console.error);
+    }
+  </script>
+</body>
+</html>
+ 
