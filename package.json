@@ -1,11 +1,4 @@
-{
-  "name": "meu-servidor",
-  "version": "1.0.0",
-  "description": "",
-  "main": "server.js",
-  "scripts": {
-    "start": "node server.js"
-  },
-  "dependencies": {},
-  "license": "ISC"
+
+"scripts": {
+  "start": "node server.js"
 }
